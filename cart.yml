@@ -16,12 +16,23 @@ metadata:
     component: cart
 spec:
   containers:
-    - name: frontend
+    - name: cart
       image: 569313928762.dkr.ecr.us-east-1.amazonaws.com/cart:2.0.0
+      volumeMounts:
+        - mountPath: /params
+          name: params
   initContainers:
     - name: aws-ssm-param-store-initcont
       image: 569313928762.dkr.ecr.us-east-1.amazonaws.com/aws-ssm-param-store-initcont:1.0.0
+      args: ["sample:dev.docdb.pass"]
+      volumeMounts:
+        - mountPath: /params
+          name: params
   serviceAccountName: cart
+  volumes:
+  - name: params
+    emptyDir:
+      sizeLimit: 100Mi
 
 # mapping for pod
 ---
